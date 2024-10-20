@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Result</title>
+
+    <!-- Include Swiper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;  
+            max-width: 700px;  
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: #00796b;
+        }
+        p {
+            font-size: 18px;
+            color: #444;
+        }
+        .weather-icon {
+            font-size: 80px;
+            color: #ffca28;
+            margin-bottom: 20px;
+        }
+        .current-weather {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .swiper-container {
+            width: 100%;  
+            height: auto; 
+            overflow: hidden; 
+        }
+        .swiper-wrapper {
+            display: flex; 
+        }
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: calc(33.33% - 20px);  
+            margin: 0px; 
+            box-sizing: border-box; 
+            min-height: 220px; 
+            overflow: hidden; 
+            background-size: cover; /* Ensure image covers the entire slide */
+            background-position: center; /* Center the image */
+        }
+        .swiper-slide h3 {
+            margin: 0;
+            color: #00796b;
+            text-align: center; 
+            font-size: 18px; 
+        }
+        .swiper-slide p {
+            text-align: center; 
+            margin: 5px 0; 
+            max-width: 90%; 
+            overflow-wrap: break-word; 
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #004d40;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .swiper-slide {
+                width: calc(50% - 20px); /* Show 2 slides on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .swiper-slide {
+                width: 100%; /* Show 1 slide on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weather in {{ city }}</h1>
+    </header>
+    
+    <div class="container">
+        {% if weather %}
+            <div class="error-message">{{ weather }}</div>  <!-- Error message display -->
+        {% else %}
+            <div class="weather-icon" aria-label="Weather icon">{{ icon }}</div>
+            <p class="current-weather">Temperature: {{ temp }}°C | Humidity: {{ humidity }}% | Wind: {{ wind }} km/h</p>
+
+            <h2>7-Day Forecast</h2>
+
+            <!-- Swiper Slider Container -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {% for day in forecast %}
+                        <div class="swiper-slide" style="background-image: url('{{ day.background_url | default('https://via.placeholder.com/300') }}');">
+                            <h3>{{ day.date }}</h3>
+                            <p>Condition: {{ day.condition }}</p>
+                            <p>Avg Temp: {{ day.avgtemp }}°C</p>
+                            <p>Min Temp: {{ day.mintemp }}°C, Max Temp: {{ day.maxtemp }}°C</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <a href="/" class="back-link">Check another city</a>
+    </div>
+
+    <footer class="footer">
+        <p>Powered by wttr.in</p>
+    </footer>
+
+    <!-- Include Swiper.js JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var swiper = new Swiper('.swiper-container', {
+                direction: 'horizontal',
+                slidesPerView: 3,  // Show 3 slides at a time
+                spaceBetween: 20,   // Space between slides
+                loop: false,        // Disable looping
+                pagination: false,  // Disable pagination
+                navigation: false,  // Disable navigation arrows
+                resizeObserver: true, // React to container size changes
+                breakpoints: {
+                    768: {
+                        slidesPerView: 2,  // Show 2 slides on tablets
+                    },
+                    480: {
+                        slidesPerView: 1,  // Show 1 slide on mobile
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

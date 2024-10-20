@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Result</title>
+
+    <!-- Include Swiper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <style>
+        /* Any additional styles specific to result.html can go here */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weather in {{ city }}</h1>
+    </header>
+
+    <div class="container">
+        <div class="weather-icon" aria-label="Weather icon">{{ icon }}</div>
+        <p class="current-weather">Temperature: {{ temp }}°C | Humidity: {{ humidity }}% | Wind: {{ wind }} km/h</p>
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+
+        <h2>7-Day Forecast</h2>
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for day in forecast %}
+                    <div class="swiper-slide" style="background-image: url('{{ day.background_url | default('https://via.placeholder.com/300') }}');">
+                        <h3>{{ day.date }}</h3>
+                        <p>Condition: {{ day.condition }}</p>
+                        <p>Avg Temp: {{ day.avgtemp }}°C</p>
+                        <p>Min Temp: {{ day.mintemp }}°C, Max Temp: {{ day.maxtemp }}°C</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <a href="/" class="back-link">Check another city</a>
+    </div>
+
+    <footer class="footer">
+        <p>Powered by wttr.in</p>
+    </footer>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var swiper = new Swiper('.swiper-container', {
+                direction: 'horizontal',
+                slidesPerView: 3,
+                spaceBetween: 20,
+                loop: false,
+                pagination: false,
+                navigation: false,
+                resizeObserver: true,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 2,
+                    },
+                    480: {
+                        slidesPerView: 1,
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
