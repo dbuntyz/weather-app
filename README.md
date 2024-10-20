@@ -25,3 +25,18 @@ To run the Weather App locally, follow these steps:
    ```bash
    git clone https://github.com/dbuntyz/weather-app.git
    cd weather-app
+
+2. **Create a virtual environment:**
+   ```bash
+   python -m venv venv
+3. **Upgrade pip to the latest version:**
+   ```bash
+   pip install --upgrade pip
+   pip install requests
+   pip install flask
+4. **Run the application:**
+   ```bash
+   python app.py
+5. **Open your web browser and go to:**
+   ```bash
+   http://127.0.0.1:5000
